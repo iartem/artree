@@ -12,4 +12,6 @@ module.exports = {
       isolatedModules: true,
     },
   },
+  setupFilesAfterEnv: ["<rootDir>/test/setup-crypt.ts"],
+  setupFiles: ["<rootDir>/test/setup-crypto.ts"],
 };

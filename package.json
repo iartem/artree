@@ -1,6 +1,6 @@
 {
   "name": "typescript-npm-package-template",
-  "version": "0.0.0-development",
+  "version": "0.1.0",
   "description": "A template for creating npm packages using TypeScript and VSCode",
   "main": "./lib/index.js",
   "files": [
@@ -19,13 +19,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryansonshine/typescript-npm-package-template.git"
+    "url": "git+https://github.com/iartem/artree.git"
   },
   "license": "MIT",
   "author": {
-    "name": "Ryan Sonshine",
+    "name": "Artem Salpagarov",
     "email": "ryansonshine@users.noreply.github.com",
-    "url": "https://github.com/ryansonshine"
+    "url": "https://github.com/iartem"
   },
   "engines": {
     "node": ">=12.0"
@@ -42,29 +42,32 @@
     "codecov"
   ],
   "bugs": {
-    "url": "https://github.com/ryansonshine/typescript-npm-package-template/issues"
+    "url": "https://github.com/iartem/artree/issues"
   },
-  "homepage": "https://github.com/ryansonshine/typescript-npm-package-template#readme",
+  "homepage": "https://github.com/iartem/artree#readme",
   "devDependencies": {
+    "@noble/ciphers": "^0.5.3",
+    "@noble/curves": "^1.4.2",
+    "@noble/hashes": "^1.4.0",
     "@ryansonshine/commitizen": "^4.2.8",
     "@ryansonshine/cz-conventional-changelog": "^3.3.4",
     "@types/jest": "^27.5.2",
-    "@types/node": "^12.20.11",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
+    "@types/node": "^12.20.55",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
     "conventional-changelog-conventionalcommits": "^5.0.0",
-    "eslint": "^7.25.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-prettier": "^3.4.1",
     "husky": "^6.0.0",
-    "jest": "^27.2.0",
-    "lint-staged": "^13.2.1",
-    "prettier": "^2.2.1",
-    "semantic-release": "^21.0.1",
-    "ts-jest": "^27.0.5",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.2.4"
+    "jest": "^27.5.1",
+    "lint-staged": "^13.3.0",
+    "prettier": "^2.8.8",
+    "semantic-release": "^24.0.0",
+    "ts-jest": "^27.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.5"
   },
   "config": {
     "commitizen": {
