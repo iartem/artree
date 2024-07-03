@@ -1,7 +1,7 @@
 {
-  "name": "typescript-npm-package-template",
+  "name": "artree",
   "version": "0.1.0",
-  "description": "A template for creating npm packages using TypeScript and VSCode",
+  "description": "Asyncronous Ratcheting Tree in Typescript",
   "main": "./lib/index.js",
   "files": [
     "lib/**/*"
@@ -24,7 +24,7 @@
   "license": "MIT",
   "author": {
     "name": "Artem Salpagarov",
-    "email": "ryansonshine@users.noreply.github.com",
+    "email": "iartem@users.noreply.github.com",
     "url": "https://github.com/iartem"
   },
   "engines": {
