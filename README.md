@@ -130,7 +130,7 @@ alice.processKeyUpdate(bobUpdateMessage);
 expect(alice.stage.sk).toEqual(bob.stage.sk); // look Ma, same keys!
 ```
 
-See full example [in tests](https://github.com/iartem/artree/blob/master/test/art.spec.ts#33).
+See full example [in tests](https://github.com/iartem/artree/blob/main/test/art.spec.ts#L57).
 
 ### Tree modifications after initialization
 
