@@ -68,7 +68,7 @@ export class Leaf implements Clonable {
     yield this;
   }
 
-  *leafs(): Generator<Leaf> {
+  *leaves(): Generator<Leaf> {
     yield this;
   }
 }

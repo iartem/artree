@@ -98,11 +98,11 @@ export class Node implements Clonable {
     }
   }
 
-  *leafs(): Generator<Leaf> {
-    for (const l of this.left.leafs()) {
+  *leaves(): Generator<Leaf> {
+    for (const l of this.left.leaves()) {
       yield l;
     }
-    for (const l of this.right.leafs()) {
+    for (const l of this.right.leaves()) {
       yield l;
     }
   }

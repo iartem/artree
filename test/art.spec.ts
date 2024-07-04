@@ -36,10 +36,10 @@ describe('ART', () => {
       }).toThrow();
     });
 
-    it('should return peers & leafs', () => {
+    it('should return peers & leaves', () => {
       const [a] = referenceGroup();
       expect(a.peers.length).toEqual(3);
-      expect(a.leafs.length).toEqual(3);
+      expect(a.leaves.length).toEqual(3);
     });
 
     it('Peer should throw if ephemeral key signature is invalud', () => {
@@ -332,8 +332,8 @@ describe('ART', () => {
           case 2: {
             const peer = generate(1)[0];
             if (!peer) throw new Error();
-            const leafs = Array.from(init.root.leafs());
-            const leaf = leafs[Math.floor(Math.random() * leafs.length)];
+            const leaves = Array.from(init.root.leaves());
+            const leaf = leaves[Math.floor(Math.random() * leaves.length)];
             if (!leaf) throw new Error();
 
             console.log(`adding member ${toFirstThree(peer.identity.pk)} to the right of ${toFirstThree(leaf.peer.identity_pk)}`);

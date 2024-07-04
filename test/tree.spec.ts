@@ -5,7 +5,7 @@ import { generate } from './test.utils';
 
 function serDeser(node: Node): Node {
   const data = new Uint8Array(
-    node.length * (1 + crypt.PK_LENGTH) + Array.from(node.leafs()).length * (2 * crypt.PK_LENGTH + crypt.SI_LENGTH)
+    node.length * (1 + crypt.PK_LENGTH) + Array.from(node.leaves()).length * (2 * crypt.PK_LENGTH + crypt.SI_LENGTH)
   );
   const offset1 = new Offset();
   serializeTree(data, new DataView(data.buffer), offset1, node);

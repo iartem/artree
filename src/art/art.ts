@@ -39,7 +39,7 @@ export class ART implements Clonable {
   get leaf(): Leaf {
     const leaf = this.leafOf(this.me);
     if (!leaf) {
-      throw new Err(ErrCode.INCONSISTENT_STATE, 'No my leafs in the tree');
+      throw new Err(ErrCode.INCONSISTENT_STATE, 'No my leaves in the tree');
     }
     return leaf;
   }
@@ -50,7 +50,7 @@ export class ART implements Clonable {
    */
   leafOf(peer: Peer | PK): Leaf | undefined {
     return Gen.find(
-      this.root.leafs(),
+      this.root.leaves(),
       (l) => l.peer === peer || (peer instanceof Uint8Array && (equals(l.peer.identity_pk, peer) || equals(l.peer.ephemeral_pk, peer)))
     );
   }
@@ -85,14 +85,14 @@ export class ART implements Clonable {
    * Get list of tree Peers
    */
   get peers(): Peer[] {
-    return Gen.collect(this.root.leafs(), (l) => l.peer);
+    return Gen.collect(this.root.leaves(), (l) => l.peer);
   }
 
   /**
-   * Get all leafs
+   * Get all leaves
    */
-  get leafs(): Leaf[] {
-    return Gen.collect(this.root.leafs(), (l) => l);
+  get leaves(): Leaf[] {
+    return Gen.collect(this.root.leaves(), (l) => l);
   }
 
   /**
@@ -116,7 +116,7 @@ export class ART implements Clonable {
     }
     offset.assert(ikm.length);
 
-    const info = concat(...Gen.collect(this.root.leafs(), (leaf) => leaf.peer.identity_pk));
+    const info = concat(...Gen.collect(this.root.leaves(), (leaf) => leaf.peer.identity_pk));
 
     return (this.stage = keypair(crypt.hkdf(ikm, undefined, info, crypt.SK_LENGTH)));
   }
@@ -152,7 +152,7 @@ export class ART implements Clonable {
    */
   static fromSetupMessage(me: Me, message: Uint8Array): ART {
     const { tree, exchange_pk, signature } = ART.decodeSnapshot(message);
-    const initiatorLeaf = Gen.find(tree.leafs(), () => true);
+    const initiatorLeaf = Gen.find(tree.leaves(), () => true);
     if (!initiatorLeaf) {
       throw new Err(ErrCode.INCONSISTENT_STATE, 'Unreachable');
     }
@@ -214,7 +214,7 @@ export class ART implements Clonable {
       throw new Err(ErrCode.INCONSISTENT_STATE, 'No stage key in split snapshot');
     }
 
-    const initiatorLeaf = Gen.find(tree.leafs(), () => true);
+    const initiatorLeaf = Gen.find(tree.leaves(), () => true);
     if (!initiatorLeaf) {
       throw new Err(ErrCode.INCONSISTENT_STATE, 'Unreachable');
     }
@@ -229,13 +229,13 @@ export class ART implements Clonable {
       throw new Err(ErrCode.INVALID_SIGNATURE, 'Invalid signature of split message');
     }
 
-    const leaf = Gen.find(tree.leafs(), (leaf) => equals(leaf.pk, at));
+    const leaf = Gen.find(tree.leaves(), (leaf) => equals(leaf.pk, at));
     if (!leaf) {
       throw new Err(ErrCode.INVALID_ARGUMENT, 'No leaf to split at');
     }
 
     let init_pk;
-    if (Gen.find(tree.leafs(), (l) => equals(l.peer.identity_pk, identity_pk))) {
+    if (Gen.find(tree.leaves(), (l) => equals(l.peer.identity_pk, identity_pk))) {
       if (!crypt.verify(splitter_signature, splitMessage.subarray(0, -2 * crypt.SI_LENGTH), leaf.peer.ephemeral_pk)) {
         throw new Err(ErrCode.INVALID_SIGNATURE, 'Invalid signature of split message creator');
       }
@@ -319,7 +319,7 @@ export class ART implements Clonable {
     if (!leafPk || !peerPk) {
       throw new Err(ErrCode.INCONSISTENT_STATE, 'Not enough PKs in key update');
     }
-    const leaf = Gen.find(this.root.leafs(), (l) => equals(leafPk, l.pk));
+    const leaf = Gen.find(this.root.leaves(), (l) => equals(leafPk, l.pk));
     if (!leaf) {
       throw new Err(ErrCode.INVALID_ARGUMENT, 'No such leaf');
     }
@@ -348,7 +348,7 @@ export class ART implements Clonable {
   }
 
   /**
-   * Split one of the leafs into 2 adding new one to the right of old one.
+   * Split one of the leaves into 2 adding new one to the right of old one.
    * Can be used in 2 ways:
    * - [at = undefined] any tree member can split their own leaf with new peer which has the same identity key
    * - [at != undefined] tree initiator can split any tree leaf
@@ -362,14 +362,14 @@ export class ART implements Clonable {
     let leaf: Leaf;
     let encryption_key;
 
-    if (Gen.find(this.root.leafs(), (l) => equals(l.peer.identity_pk, peer.identity_pk))) {
+    if (Gen.find(this.root.leaves(), (l) => equals(l.peer.identity_pk, peer.identity_pk))) {
       leaf = this.leaf;
       encryption_key = this.me.identity.sk;
     } else {
       if (!this.isInitiator) {
         throw new Err(ErrCode.INVALID_ARGUMENT, 'You can only split your node with a peer with the same identity key');
       }
-      const l = Gen.find(this.root.leafs(), (l) => equals(l.pk, at || this.leaf.pk));
+      const l = Gen.find(this.root.leaves(), (l) => equals(l.pk, at || this.leaf.pk));
       if (!l) {
         throw new Err(ErrCode.INVALID_ARGUMENT, 'No such leaf to split at');
       }
@@ -422,7 +422,7 @@ export class ART implements Clonable {
       throw new Err(ErrCode.INVALID_SIGNATURE, 'Invalid signature of split message');
     }
 
-    const leaf = Gen.find(this.root.leafs(), (leaf) => equals(leaf.pk, at));
+    const leaf = Gen.find(this.root.leaves(), (leaf) => equals(leaf.pk, at));
     if (!leaf) {
       throw new Err(ErrCode.INVALID_ARGUMENT, 'No leaf to split at');
     }
@@ -447,11 +447,9 @@ export class ART implements Clonable {
   /**
    * Create tree snapshot containing all node PKs & peers identity PK, ephemeral PK & ephemeral signature.
    * Snapshot is used in setup message & split snapshot, therefore it also has exchange key for new peers.
-   *
-   * @returns
    */
   private static snapshot(tree: Node, me: Me, exchange: Keypair, stage?: { sk: SK; encryption_key: SK }) {
-    const peers = Gen.collect(tree.leafs(), (l) => l.peer);
+    const peers = Gen.collect(tree.leaves(), (l) => l.peer);
     const snapshot = new Uint8Array(
       peers.length * crypt.PK_LENGTH + // peers' PKs
         peers.length * crypt.PK_LENGTH + // peers' ephemeral PKs
@@ -462,7 +460,7 @@ export class ART implements Clonable {
         (stage ? crypt.SK_LENGTH + crypt.ENCRYPTION_PREFIX_LENGTH + crypt.ENCRYPTION_SUFFIX_LENGTH : 0) +
         crypt.SI_LENGTH // signature
     );
-    const view = new DataView(snapshot.buffer);
+    const view = new DataView(snapshot.buffer, snapshot.byteOffset);
     const offset = new Offset();
     serializeTree(snapshot, view, offset, tree);
     snapshot.set(exchange.pk, offset.add(crypt.PK_LENGTH));
@@ -484,13 +482,13 @@ export class ART implements Clonable {
    * Decode snapshot into usable types
    */
   private static decodeSnapshot(message: Uint8Array, me?: Me) {
-    const view = new DataView(message.buffer);
+    const view = new DataView(message.buffer, message.byteOffset);
     const offset = new Offset(0);
     const tree = deserializeTree(message, view, offset) as Node;
     const exchange_pk = message.slice(offset.add(crypt.PK_LENGTH), offset.value);
     let stage_sk = undefined;
     if (me) {
-      const peers = Gen.collect(tree.leafs(), (l) => l.peer);
+      const peers = Gen.collect(tree.leaves(), (l) => l.peer);
       const initiator = peers[0];
       if (!initiator) {
         throw new Err(ErrCode.INCONSISTENT_STATE, 'Unreachable');
